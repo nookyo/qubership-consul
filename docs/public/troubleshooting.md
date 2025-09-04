@@ -10,6 +10,7 @@ The following topics are covered in this chapter:
   * [No Cluster Leader - Election Timeout Reached](#no-cluster-leader---election-timeout-reached)
   * [Consul Client Failed Renaming Node ID](#consul-client-failed-renaming-node-id)
   * [Consul Responses with 429 Code](#consul-responses-with-429-code)
+  * [Failed to get log](#failed-to-get-log)
 * [Deployment Problem](#deployment-problem)
   * [Consul Server Pod Does Not Start](#consul-server-pod-does-not-start)
     * [Monitoring](#monitoring)
@@ -59,7 +60,7 @@ The following topics are covered in this chapter:
 This section provides detailed troubleshooting procedures for the Consul Service.
 
 If you face any problem with Consul Service refer to the 
-[Official Troubleshooting Guide](https://learn.hashicorp.com/consul/day-2-operations/troubleshooting).
+[Official Troubleshooting Guide](https://developer.hashicorp.com/consul/docs/troubleshoot).
 
 # Common Problems
 
@@ -157,7 +158,7 @@ extra-from-values.json: '{"disable_update_check":true, "disable_host_node_id":tr
 ```
 
 Also, the stored Node ID can be discarded by removing the `/data/node-id` file manually in Client pod terminal.
-In both cases, restart the affected Client pods to apply changes and confirm that unique node id is applied
+In both cases, restart the affected Client pods to apply changes and confirm that unique node ID is applied
 for every Consul Client.
 
 ## Consul Responses with 429 Code
@@ -203,7 +204,6 @@ Problem with error log "agent.server.raft: failed to get log" allows any action:
   3. Then you need restart pods. Consul is reload, but part of data will be loss.
   4. Trying restore last backup through consul backup daemon. If consul backup daemon don't work, then reload.
   5. Check business applications - key-manager and config-server. If they are failure on authentication to consul, then change secrets to correct from consul-acl-bootstral-secret. Then reboot.
-
 
 # Deployment Problem
 
@@ -281,7 +281,7 @@ it indicates that the NFS works in "On demand" mode and does not allow to read f
 ==> Error starting agent: Failed to start Consul server: Failed to start Raft: open /consul/data/raft/raft.db: invalid argument
 ```
 
-You need to resolve the issue with NFS configuration or start using local storage instead of NFS.
+You need to resolve the issue with NFS configuration or start using localStorage instead of NFS.
 
 # ACL Issues
 
