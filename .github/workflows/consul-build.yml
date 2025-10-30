@@ -11,11 +11,10 @@ on:
     types: [integration-consul-built]
 
 env:
-  EVENT_TAG_NAME: ${{ github.event.client_payload.tag }}
+  EVENT_TAG: ${{ github.event.client_payload.tag }}
   EVENT_BASE_IMAGE: ${{ github.event.client_payload.base_image }}
   EVENT_OWNER: ${{ github.event.client_payload.owner }}
   EVENT_REPO: ${{ github.event.client_payload.repo }}
-#  TAG_NAME: ${{ github.event.release.tag_name || github.ref }}
 
 jobs:
   build:
@@ -23,7 +22,7 @@ jobs:
     steps:
       - name: Check payload
         run: |
-          echo "TAG_NAME=${{ env.EVENT_TAG_NAME }}"
+          echo "TAG=${{ env.EVENT_TAG }}"
           echo "BASE_IMAGE=${{ env.EVENT_BASE_IMAGE }}"
           echo "OWNER=${{ env.EVENT_OWNER }}"
           echo "REPO_NAME=${{ env.EVENT_REPO }}"
