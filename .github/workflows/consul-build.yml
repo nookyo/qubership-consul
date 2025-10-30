@@ -1,0 +1,32 @@
+name: Consul Integration Build
+run-name: "Event: Tag ${{ github.event.client_payload.tag }} from ${{ github.event.client_payload.repo }} MANAGMENT_IMAGE ${{ github.event.client_payload.management_image }} #${{ github.run_number }}"
+
+permissions:
+  contents: read
+  packages: write
+  actions: read
+
+on:
+  repository_dispatch:
+    types: [integration-consul-built]
+
+env:
+  EVENT_TAG_NAME: ${{ github.event.client_payload.tag }}
+  EVENT_BASE_IMAGE: ${{ github.event.client_payload.base_image }}
+  EVENT_OWNER: ${{ github.event.client_payload.owner }}
+  EVENT_REPO: ${{ github.event.client_payload.repo }}
+#  TAG_NAME: ${{ github.event.release.tag_name || github.ref }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check payload
+        run: |
+          echo "TAG_NAME=${{ env.EVENT_TAG_NAME }}"
+          echo "BASE_IMAGE=${{ env.EVENT_BASE_IMAGE }}"
+          echo "OWNER=${{ env.EVENT_OWNER }}"
+          echo "REPO_NAME=${{ env.EVENT_REPO }}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
