@@ -38,5 +38,9 @@ jobs:
           echo "Updating image reference to: $IMAGE"
           sed -i "s|^  image: \".*\"|  image: \"$IMAGE\"|" "$FILE"
 
-          echo "Result:"
-          cat "$FILE"
+
+          echo "Changes:"
+          git diff -- "$FILE"
+
+          # echo "Result:"
+          # cat "$FILE"
