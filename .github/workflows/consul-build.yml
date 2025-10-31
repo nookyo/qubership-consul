@@ -15,10 +15,13 @@ env:
   EVENT_BASE_IMAGE: ${{ github.event.client_payload.base_image }}
   EVENT_OWNER: ${{ github.event.client_payload.owner }}
   EVENT_REPO: ${{ github.event.client_payload.repo }}
+  TARGET_BRANCH: "feature/consul-patched"
 
 jobs:
-  build:
+  update-image-reference:
     runs-on: ubuntu-latest
+    outputs:
+      target_branch: ${{ steps.update_image.outputs.target_branch }}
     steps:
       - name: Check payload
         run: |
@@ -31,9 +34,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Update image reference
+        id: update_image
         run: |
           IMAGE=${{ env.EVENT_BASE_IMAGE }}
-          BRANCH="feature/consul-patched"
+          BRANCH=${{ env.TARGET_BRANCH }}
+          echo "target_branch=${BRANCH}" >> "$GITHUB_OUTPUT"
+
           FILE="charts/helm/consul-service/values.yaml"
 
           git config user.name "github-actions[bot]"
@@ -54,3 +60,19 @@ jobs:
           git add "$FILE"
           git commit -m "[IBuild] Update Consul with [patched] image to $IMAGE"
           git push origin "$BRANCH" --force
+  consul-pipeline:
+    needs: update-image-reference
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consul Integration Pipeline
+        run: |
+          echo "This is a placeholder for the Consul integration pipeline."
+          echo "Target branch from previous job: ${{ needs.update-image-reference.outputs.target_branch }}"
+    # uses: Netcracker/qubership-test-pipelines/.github/workflows/consul.yaml@d45ea797961a4886faeb675da5d75de90c2bd8c0
+    # with:
+    #   service_branch: "${{ needs.update-image-reference.outputs.target_branch }}"
+    #   versions_file: ".github/versions.yaml"
+    #   pipeline_branch: "d45ea797961a4886faeb675da5d75de90c2bd8c0" #this value must match the value after '@' in 'uses'
+    # secrets:
+    #   AWS_S3_ACCESS_KEY_ID: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
+    #   AWS_S3_ACCESS_KEY_SECRET: ${{ secrets.AWS_S3_ACCESS_KEY_SECRET }}
