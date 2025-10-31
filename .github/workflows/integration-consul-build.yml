@@ -128,6 +128,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' && github.actor != 'dependabot[bot]' }}
           tags: ghcr.io/${{ env.EVENT_OWNER }}/${{ matrix.component.name }}:${{ env.EVENT_TAG }}
           provenance: false
+
   # consul-pipeline:
   #   needs: update-image-reference
   #   uses: Netcracker/qubership-test-pipelines/.github/workflows/consul.yaml@d45ea797961a4886faeb675da5d75de90c2bd8c0
