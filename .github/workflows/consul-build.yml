@@ -60,6 +60,7 @@ jobs:
           git add "$FILE"
           git commit -m "[IBuild] Update Consul with [patched] image to $IMAGE"
           git push origin "$BRANCH" --force
+
   consul-pipeline:
     needs: update-image-reference
     runs-on: ubuntu-latest
