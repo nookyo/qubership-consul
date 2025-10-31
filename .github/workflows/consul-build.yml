@@ -32,7 +32,7 @@ jobs:
 
       - name: Update image reference
         run: |
-          IMAGE=${{ github.event.client_payload.image }}
+          IMAGE=${{ env.EVENT_BASE_IMAGE }}
           FILE="charts/helm/consul-service/values.yaml"
 
           echo "Updating Consul image to: $IMAGE"
