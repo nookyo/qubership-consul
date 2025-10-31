@@ -60,6 +60,7 @@ jobs:
           git add "$FILE"
           git commit -m "[IBuild] Update Consul with [patched] image to $IMAGE"
           git push origin "$BRANCH" --force
+
   multiplatform_build:
     strategy:
       fail-fast: false
