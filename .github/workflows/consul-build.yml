@@ -32,14 +32,11 @@ jobs:
 
       - name: Update image reference
         run: |
-          IMAGE=${{ env.EVENT_BASE_IMAGE }}
+          IMAGE=${{ github.event.client_payload.base_image }}
           FILE="charts/helm/consul-service/values.yaml"
 
           echo "Updating Consul image to: $IMAGE"
-          sed -i '/^global:/,/^  [^ ]/ s|^  image: ".*"|  image: "'"$IMAGE"'"|' "$FILE"
+          sed -i "0,/^  image: \".*\"/s|^  image: \".*\"|  image: \"$IMAGE\"|" "$FILE"
 
           echo "Diff:"
           git diff -- "$FILE"
-
-          # echo "Result:"
-          # cat "$FILE"
