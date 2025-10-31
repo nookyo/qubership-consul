@@ -2,7 +2,7 @@ name: Consul Integration Build
 run-name: "Event: Tag ${{ github.event.client_payload.tag }} from ${{ github.event.client_payload.repo }}  #${{ github.run_number }}"
 
 permissions:
-  contents: read
+  contents: write
   packages: write
   actions: read
 
@@ -32,11 +32,25 @@ jobs:
 
       - name: Update image reference
         run: |
-          IMAGE=${{ github.event.client_payload.base_image }}
+          IMAGE=${{ env.EVENT_BASE_IMAGE }}
+          BRANCH="consul-patched"
           FILE="charts/helm/consul-service/values.yaml"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]qubership.com"
+          git checkout -B "$BRANCH"
 
           echo "Updating Consul image to: $IMAGE"
           sed -i "0,/^  image: \".*\"/s|^  image: \".*\"|  image: \"$IMAGE\"|" "$FILE"
 
           echo "Diff:"
           git diff -- "$FILE"
+
+          if git diff --quiet "$FILE"; then
+            echo "No changes detected."
+            exit 0
+          fi
+
+          git add "$FILE"
+          git commit -m "[IBuild] Update Consul with [patched] image to $IMAGE"
+          git push origin "$BRANCH" --force
