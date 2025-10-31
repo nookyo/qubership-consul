@@ -62,6 +62,7 @@ jobs:
           git push origin "$BRANCH" --force
 
   multiplatform_build:
+    needs: update-image-reference
     strategy:
       fail-fast: false
       matrix:
