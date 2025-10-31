@@ -33,7 +33,7 @@ jobs:
       - name: Update image reference
         run: |
           IMAGE=${{ env.EVENT_BASE_IMAGE }}
-          BRANCH="consul-patched"
+          BRANCH="feature/consul-patched"
           FILE="charts/helm/consul-service/values.yaml"
 
           git config user.name "github-actions[bot]"
