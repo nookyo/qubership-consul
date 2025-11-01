@@ -82,7 +82,7 @@ jobs:
           default-template: "{{ref-name}}"
           extra-tags: ${{ env.EVENT_TAG }}
           replace-symbol: "_"
-  build:
+  multiplatform_build:
     name: Build Docker Images
     needs: update-image-reference
     runs-on: ubuntu-latest
@@ -111,7 +111,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   consul-pipeline:
-    needs: update-image-reference
+    needs: [update-image-reference, multiplatform_build]
     uses: Netcracker/qubership-test-pipelines/.github/workflows/consul.yaml@d45ea797961a4886faeb675da5d75de90c2bd8c0
     with:
       service_branch: "${{ needs.update-image-reference.outputs.TARGET_BRANCH }}"
