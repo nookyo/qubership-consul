@@ -1,4 +1,4 @@
-name: Consul Integration Build
+name: Test docker
 run-name: "Event: Tag ${{ github.event.client_payload.tag }} from ${{ github.event.client_payload.repo }}  #${{ github.run_number }}"
 
 permissions:
@@ -7,8 +7,7 @@ permissions:
   actions: read
 
 on:
-  repository_dispatch:
-    types: [integration-consul-built]
+  workflow_dispatch:
 
 env:
   EVENT_TAG: ${{ github.event.client_payload.tag }}
@@ -21,55 +20,26 @@ jobs:
   update-image-reference:
     runs-on: ubuntu-latest
     outputs:
-      TARGET_BRANCH: ${{ steps.update_image.outputs.target_branch }}
       components: ${{ steps.load_config.outputs.components }}
       platforms: ${{ steps.load_config.outputs.platforms }}
       tags: ${{ steps.meta.outputs.result }}
     steps:
-      - name: Check payload
-        run: |
-          echo "TAG=${{ env.EVENT_TAG }}"
-          echo "BASE_IMAGE=${{ env.EVENT_BASE_IMAGE }}"
-          echo "OWNER=${{ env.EVENT_OWNER }}"
-          echo "REPO_NAME=${{ env.EVENT_REPO }}"
-
       - name: Checkout
         uses: actions/checkout@v5
-
-      - name: Update image reference
-        id: update_image
-        run: |
-          IMAGE=${{ env.EVENT_BASE_IMAGE }}
-          BRANCH=${{ env.BRANCH }}
-          echo "target_branch=${BRANCH}" >> "$GITHUB_OUTPUT"
-
-          FILE="charts/helm/consul-service/values.yaml"
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]qubership.com"
-          git checkout -B "$BRANCH"
-
-          echo "Updating Consul image to: $IMAGE"
-          sed -i "0,/^  image: \".*\"/s|^  image: \".*\"|  image: \"$IMAGE\"|" "$FILE"
-
-          echo "Diff:"
-          git diff -- "$FILE"
-
-          if git diff --quiet "$FILE"; then
-            echo "No changes detected."
-            exit 0
-          fi
-
-          git add "$FILE"
-          git commit -m "[IBuild] Update Consul with [patched] image to $IMAGE"
 
       - name: Load Config
         id: load_config
         run: |
-          echo "components=$(jq -c '.components' .github/docker-build-config.json)" >> "$GITHUB_OUTPUT"
-          echo "platforms=$(jq -c '.platforms' .github/docker-build-config.json)" >> "$GITHUB_OUTPUT"
-          echo components=$components
-          echo platforms=$platforms
+
+            components=$(jq -c '.components' .github/dev-build-config.json)
+            platforms=$(jq -c '.platforms' .github/dev-build-config.json)
+
+            echo "components=$components" >> "$GITHUB_OUTPUT"
+            echo "platforms=$platforms" >> "$GITHUB_OUTPUT"
+
+            echo "components=$components"
+            echo "platforms=$platforms"
+
 
       - name: CReate Meta info (tags)
         uses: netcracker/qubership-workflow-hub/actions/metadata-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
@@ -90,8 +60,19 @@ jobs:
       matrix:
         component: ${{ fromJson(needs.update-image-reference.outputs.components) }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        # with:
+        #   ref: ${{ env.BRANCH }}
+
+      - name: Test
+        run: |
+          ls -la
+          ls -la integration-tests
+          ls -la integration-tests/docker
+
       - name: Docker
-        uses: netcracker/qubership-workflow-hub/actions/docker-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
+        uses: netcracker/qubership-workflow-hub/actions/docker-action@0f2be042d7c833c6bf60df85732609b7991fb821 #2.0.0
         with:
           ref: ${{ env.BRANCH }}
           component: ${{ toJson(matrix.component) }}
