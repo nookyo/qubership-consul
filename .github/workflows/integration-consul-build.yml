@@ -90,22 +90,11 @@ jobs:
       matrix:
         component: ${{ fromJson(needs.update-image-reference.outputs.components) }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ env.BRANCH }}
-
-      - name: Test
-        run: |
-          ls -la
-          ls -la integration-tests
-          ls -la integration-tests/docker
-
       - name: Docker
-        uses: netcracker/qubership-workflow-hub/actions/docker-action@0f2be042d7c833c6bf60df85732609b7991fb821 #2.0.0
+        uses: netcracker/qubership-workflow-hub/actions/docker-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
         with:
-
           ref: ${{ env.BRANCH }}
+          component: ${{ toJson(matrix.component) }}
           download-artifact: false
           platforms: ${{ needs.update-image-reference.outputs.platforms }}
           tags: ${{ needs.update-image-reference.outputs.tags }}
