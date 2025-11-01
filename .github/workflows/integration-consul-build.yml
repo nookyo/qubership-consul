@@ -88,15 +88,23 @@ jobs:
       matrix:
         component: ${{ fromJson(needs.update-image-reference.outputs.components) }}
     steps:
-      - name: Docker
-        uses: netcracker/qubership-workflow-hub/actions/docker-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
-        with:
-          ref: ${{ env.BRANCH }}
-          download-artifact: false
-          platforms: ${{ needs.update-image-reference.outputs.platforms }}
-          tags: ${{ needs.update-image-reference.outputs.tags }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions@checkout@v5
+
+      - name: Test
+        run: |
+            ls -la
+            la -la integration-tests/docker/Dockerfile
+
+      # - name: Docker
+      #   uses: netcracker/qubership-workflow-hub/actions/docker-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
+      #   with:
+      #     ref: ${{ env.BRANCH }}
+      #     download-artifact: false
+      #     platforms: ${{ needs.update-image-reference.outputs.platforms }}
+      #     tags: ${{ needs.update-image-reference.outputs.tags }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # multiplatform_build:
   #   needs: update-image-reference
