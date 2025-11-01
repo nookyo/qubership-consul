@@ -90,12 +90,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          ref: ${{ env.BRANCH }}
 
       - name: Test
         run: |
-            ls -la
-            ls -la integration-tests
-            ls -la integration-tests/docker
+          ls -la
+          ls -la integration-tests
+          ls -la integration-tests/docker
 
       # - name: Docker
       #   uses: netcracker/qubership-workflow-hub/actions/docker-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
