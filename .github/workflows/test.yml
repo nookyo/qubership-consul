@@ -31,8 +31,8 @@ jobs:
         id: load_config
         run: |
 
-            components=$(jq -c '.components' .github/docker-build-config.json)
-            platforms=$(jq -c '.platforms' .github/docker-build-config.json)
+            components=$(jq -c '.components' .github/dev-build-config.json)
+            platforms=$(jq -c '.platforms' .github/dev-build-config.json)
 
             echo "components=$components" >> "$GITHUB_OUTPUT"
             echo "platforms=$platforms" >> "$GITHUB_OUTPUT"
@@ -62,8 +62,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-        with:
-          ref: ${{ env.BRANCH }}
+        # with:
+        #   ref: ${{ env.BRANCH }}
 
       - name: Test
         run: |
