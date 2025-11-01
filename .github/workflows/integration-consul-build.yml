@@ -74,6 +74,7 @@ jobs:
         id: meta
         with:
           default-template: "{{ref-name}}"
+          extra-tags: ${{ env.EVENT_TAG }}
           replace-symbol: "_"
   build:
     name: Build Docker Images
