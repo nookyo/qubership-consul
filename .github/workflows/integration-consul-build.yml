@@ -94,7 +94,8 @@ jobs:
       - name: Test
         run: |
             ls -la
-            la -la integration-tests/docker/Dockerfile
+            ls -la integration-tests
+            ls -la integration-tests/docker
 
       # - name: Docker
       #   uses: netcracker/qubership-workflow-hub/actions/docker-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
