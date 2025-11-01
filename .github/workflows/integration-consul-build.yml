@@ -35,6 +35,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          ref: ${{ env.BRANCH }}
+          fetch-depth: 0
 
       - name: Update image reference
         id: update_image
