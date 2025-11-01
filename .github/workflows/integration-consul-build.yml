@@ -66,8 +66,8 @@ jobs:
       - name: Load Config
         id: load_config
         run: |
-          echo "components=$(jq -c '.components' .github/dev-build-config.json)" >> "$GITHUB_OUTPUT"
-          echo "platforms=$(jq -c '.platforms' .github/dev-build-config.json)" >> "$GITHUB_OUTPUT"
+          echo "components=$(jq -c '.components' .github/docker-build-config.json)" >> "$GITHUB_OUTPUT"
+          echo "platforms=$(jq -c '.platforms' .github/docker-build-config.json)" >> "$GITHUB_OUTPUT"
           echo components=$components
           echo platforms=$platforms
 
