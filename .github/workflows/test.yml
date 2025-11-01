@@ -75,6 +75,7 @@ jobs:
         uses: netcracker/qubership-workflow-hub/actions/docker-action@0f2be042d7c833c6bf60df85732609b7991fb821 #2.0.0
         with:
           ref: ${{ env.BRANCH }}
+          component: ${{ matrix.component }}
           download-artifact: false
           platforms: ${{ needs.update-image-reference.outputs.platforms }}
           tags: ${{ needs.update-image-reference.outputs.tags }}
