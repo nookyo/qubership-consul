@@ -1,10 +1,10 @@
-{
-  "components": [
-    {
-      "name": "qubership-consul-integration-tests",
-      "file": "integration-tests/docker/Dockerfile",
-      "context": ""
-    }
-  ],
-  "platforms": "linux/amd64,linux/arm64"
-}
+  {
+    "components": [
+      {
+        "name": "qubership-consul-integration-tests",
+        "file": "integration-tests/docker/Dockerfile",
+        "context": ""
+      }
+    ],
+    "platforms": "linux/amd64,linux/arm64"
+  }
