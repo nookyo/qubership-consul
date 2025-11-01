@@ -30,14 +30,16 @@ jobs:
       - name: Load Config
         id: load_config
         run: |
-          echo "components=$(jq -c '.components' .github/docker-build-config.json)" >> "$GITHUB_OUTPUT"
-          echo "platforms=$(jq -c '.platforms' .github/docker-build-config.json)" >> "$GITHUB_OUTPUT"
 
-          echo "components=$components" >> "$GITHUB_OUTPUT"
-          echo "platforms=$platforms" >> "$GITHUB_OUTPUT"
+            components=$(jq -c '.components' .github/docker-build-config.json)
+            platforms=$(jq -c '.platforms' .github/docker-build-config.json)
 
-          echo "components=$components"
-          echo "platforms=$platforms"
+            echo "components=$components" >> "$GITHUB_OUTPUT"
+            echo "platforms=$platforms" >> "$GITHUB_OUTPUT"
+
+            echo "components=$components"
+            echo "platforms=$platforms"
+
 
       - name: CReate Meta info (tags)
         uses: netcracker/qubership-workflow-hub/actions/metadata-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
