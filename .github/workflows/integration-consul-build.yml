@@ -16,9 +16,6 @@ env:
   EVENT_OWNER: ${{ github.event.client_payload.owner }}
   EVENT_REPO: ${{ github.event.client_payload.repo }}
   BRANCH: "feature/consul-patched"
-  COMPONENTS: ""
-  PLATFORMS: ""
-  TAGS: ""
 
 jobs:
   update-image-reference:
