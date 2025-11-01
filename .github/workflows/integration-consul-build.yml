@@ -90,6 +90,11 @@ jobs:
       matrix:
         component: ${{ fromJson(needs.update-image-reference.outputs.components) }}
     steps:
+      - name: Debug tags and components
+        run: |
+          echo "Tags: ${{ needs.update-image-reference.outputs.tags }}"
+          echo "Component: ${{ toJson(matrix.component) }}"
+
       - name: Docker
         uses: netcracker/qubership-workflow-hub/actions/docker-action@b575bad3a0959c4e883bc34f9d055ff07fde2dbd #2.0.1
         with:
