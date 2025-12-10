@@ -40,12 +40,14 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ env.EVENT_TARGET_BRANCH }}
-          fetch-depth: 0
 
-      - name: Create or upade tech branch
+      - name: Create/update tech branch and update image
+        id: update_image
         run: |
           TECH_BRANCH="${{ env.TECH_BRANCH }}"
           TARGET_BRANCH="${{ env.EVENT_TARGET_BRANCH }}"
+          IMAGE="${{ env.EVENT_BASE_IMAGE }}"
+          FILE="charts/helm/consul-service/values.yaml"
 
           git fetch origin
 
@@ -58,29 +60,8 @@ jobs:
             git checkout -b "$TECH_BRANCH" "origin/$TARGET_BRANCH"
           fi
 
-            git push origin "$TECH_BRANCH" --force
-
-            echo "TECH_BRANCH=$TECH_BRANCH"
-            echo "TARGET_BRANCH=$TARGET_BRANCH"
-
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ env.TECH_BRANCH }}
-          fetch-depth: 0
-
-      - name: Update image reference
-        id: update_image
-        run: |
-          IMAGE=${{ env.EVENT_BASE_IMAGE }}
-          BRANCH=${{ env.TECH_BRANCH }}
-          echo "target_branch=${BRANCH}" >> "$GITHUB_OUTPUT"
-
-          FILE="charts/helm/consul-service/values.yaml"
-
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]qubership.com"
-          git checkout -B "$BRANCH"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
           echo "Updating Consul image to: $IMAGE"
           sed -i "0,/^  image: \".*\"/s|^  image: \".*\"|  image: \"$IMAGE\"|" "$FILE"
@@ -90,11 +71,21 @@ jobs:
 
           if git diff --quiet "$FILE"; then
             echo "No changes detected."
+            echo "target_branch=$TECH_BRANCH" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           git add "$FILE"
           git commit -m "[IBuild] Update Consul with [patched] image to $IMAGE"
+          git push origin "$TECH_BRANCH"
+
+          echo "target_branch=$TECH_BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ env.TECH_BRANCH }}
+          fetch-depth: 0
 
       - name: Load Config
         id: load_config
